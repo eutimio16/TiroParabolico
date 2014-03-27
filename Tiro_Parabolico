@@ -1,0 +1,184 @@
+import javax.swing.JFrame;
+
+
+@SuppressWarnings("serial")
+public class Tiro_Parabolico extends JFrame implements ActionListener {
+	
+	private JTextField Vx,
+					   Vy,
+					   hmax,
+					   acel;
+	
+	private JLabel StrVx,
+				   StrVy,
+				   StrH,
+				   StrA;
+	private JLabel lblNewLabel;
+	
+	private JCheckBox trayectoria;
+	
+	private JButton BCargar,
+					BGuardar,
+					BLanzar;
+	int valor;
+	
+	private JSlider slider;
+	
+	
+	public Tiro_Parabolico() {
+		setResizable(false);
+		getContentPane().setLayout(null);
+		
+		StrVx = new JLabel("Vx: ");
+		StrVx.setFont(new Font("Arial", Font.PLAIN, 18));
+		StrVx.setBounds(30, 30, 34, 14);
+		getContentPane().add(StrVx);
+		
+		StrVy = new JLabel("Vy: ");
+		StrVy.setFont(new Font("Arial", Font.PLAIN, 18));
+		StrVy.setBounds(30, 70, 34, 14);
+		getContentPane().add(StrVy);
+		
+		StrH = new JLabel("Altura Max:");
+		StrH.setFont(new Font("Arial", Font.PLAIN, 18));
+		StrH.setBounds(30, 112, 95, 14);
+		getContentPane().add(StrH);
+		
+		StrA = new JLabel("Aceleraci\u00F3n:");
+		StrA.setFont(new Font("Arial", Font.PLAIN, 18));
+		StrA.setBounds(30, 152, 104, 14);
+		getContentPane().add(StrA);
+		
+		Vx = new JTextField();
+		Vx.setBounds(130, 30, 86, 20);
+		getContentPane().add(Vx);
+		Vx.setColumns(10);
+		
+		Vy = new JTextField();
+		Vy.setColumns(10);
+		Vy.setBounds(130, 70, 86, 20);
+		getContentPane().add(Vy);
+		
+		hmax = new JTextField();
+		hmax.setColumns(10);
+		hmax.setBounds(130, 110, 86, 20);
+		getContentPane().add(hmax);
+		
+		acel = new JTextField();
+		acel.setColumns(10);
+		acel.setBounds(130, 149, 86, 20);
+		getContentPane().add(acel);
+		
+		trayectoria = new JCheckBox("Dibujar Trayectoria");
+		trayectoria.setBounds(52, 388, 143, 23);
+		getContentPane().add(trayectoria);
+		
+		BCargar = new JButton("Cargar");
+		BCargar.addActionListener(this);
+		BCargar.setBounds(10, 418, 89, 23);
+		getContentPane().add(BCargar);
+		
+		BGuardar = new JButton("Guardar");
+		BGuardar.addActionListener(this);
+		BGuardar.setBounds(130, 418, 89, 23);
+		getContentPane().add(BGuardar);
+		
+		BLanzar = new JButton("Lanzar");
+		BLanzar.setBounds(74, 452, 89, 23);
+		getContentPane().add(BLanzar);
+		
+		slider = new JSlider();
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				lblNewLabel.setText(Integer.toString(slider.getValue()) + " metros");
+			}
+		});
+		slider.setPaintLabels(true);
+		slider.setPaintTicks(true);
+		slider.setMajorTickSpacing(10);
+		slider.setOrientation(SwingConstants.VERTICAL);
+		slider.setBounds(40, 177, 73, 204);
+		getContentPane().add(slider);
+		
+		this.valor = slider.getValue();
+		
+		lblNewLabel = new JLabel(valor + " metros");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel.setBounds(121, 270, 95, 14);
+		getContentPane().add(lblNewLabel);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new MatteBorder(0, 2, 2, 0, (Color) new Color(0, 0, 0)));
+		panel.setBounds(250, 34, 400, 400);
+		getContentPane().add(panel);
+		
+	}
+
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
+	}
+	
+	public void guardar(String vy,String vx,String hmax,String acel){
+		try {
+			PrintWriter gd = new PrintWriter(new FileWriter("datos.txt"));
+			gd.println(vx);
+			gd.println(vy);
+			gd.println(hmax);
+			gd.println(acel);
+			if(this.trayectoria.isSelected() == true){
+				gd.println("true");
+			}else{
+				gd.println("false");
+			}
+			gd.println(slider.getValue());
+			
+			gd.close();
+			JOptionPane.showMessageDialog(this, "Datos guardados Correctamente");
+			
+		} catch (IOException e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void cargar(){
+		try {
+			BufferedReader cg = new BufferedReader(new FileReader("datos.txt"));
+			file = new JFileChooser();
+			
+			Vx.setText(cg.readLine());
+			Vy.setText(cg.readLine());
+			hmax.setText(cg.readLine());
+			acel.setText(cg.readLine());
+			if(cg.readLine() == "false"){
+				this.trayectoria.setSelected(false);
+			} else{
+				this.trayectoria.setSelected(true);
+			}
+			slider.setValue(Integer.parseInt(cg.readLine()));
+
+			cg.close();
+			JOptionPane.showMessageDialog(this, "Cargado con exito");
+		} catch (FileNotFoundException e) {
+			System.out.println(e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
+	}
+	public static void main(String[] args) {
+		Tiro_Parabolico tr = new Tiro_Parabolico();
+		tr.setVisible(true);
+		tr.setSize(690, 540);
+	}
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == BGuardar){
+			guardar(this.Vy.getText(), this.Vx.getText(), this.hmax.getText(), this.acel.getText());
+		}
+		if(e.getSource() == BCargar){
+			cargar();
+		}
+	}
+}
