@@ -1,8 +1,33 @@
+package fisica;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.MatteBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 @SuppressWarnings("serial")
-public class Tiro_Parabolico extends JFrame implements ActionListener {
+public class tiro_Parabolico extends JFrame implements ActionListener {
 	
 	private JTextField Vx,
 					   Vy,
@@ -25,7 +50,7 @@ public class Tiro_Parabolico extends JFrame implements ActionListener {
 	private JSlider slider;
 	
 	
-	public Tiro_Parabolico() {
+	public tiro_Parabolico() {
 		setResizable(false);
 		getContentPane().setLayout(null);
 		
@@ -145,7 +170,7 @@ public class Tiro_Parabolico extends JFrame implements ActionListener {
 	public void cargar(){
 		try {
 			BufferedReader cg = new BufferedReader(new FileReader("datos.txt"));
-			file = new JFileChooser();
+			JFileChooser file = new JFileChooser();
 			
 			Vx.setText(cg.readLine());
 			Vy.setText(cg.readLine());
@@ -169,7 +194,7 @@ public class Tiro_Parabolico extends JFrame implements ActionListener {
 		}
 	}
 	public static void main(String[] args) {
-		Tiro_Parabolico tr = new Tiro_Parabolico();
+		tiro_Parabolico tr = new tiro_Parabolico();
 		tr.setVisible(true);
 		tr.setSize(690, 540);
 	}
